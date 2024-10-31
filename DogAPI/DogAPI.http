@@ -1,0 +1,6 @@
+@DogAPI_HostAddress = http://localhost:5198
+
+GET {{DogAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
