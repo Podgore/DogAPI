@@ -16,6 +16,7 @@ namespace DogAPI.Test
         private readonly IMapper _mapper;
         private readonly IDogRepository _dogsRepository;
         private readonly IDogService _service;
+
         public DogServiceTests()
         {
             _mapper = new MapperConfiguration(cfg => cfg.AddProfile<DogProfile>()).CreateMapper();
@@ -135,7 +136,7 @@ namespace DogAPI.Test
         public async Task AddDogAsync_NewDog_AddsSuccessfully()
         {
             // Arrange
-            var dogDTO = new CreateDogRequestDTO { Name = "NewDogEntity", Color = "grey", TailLenght = 23, Weight = 14};
+            var dogDTO = new CreateDogDTO { Name = "NewDogEntity", Color = "grey", TailLenght = 23, Weight = 14};
 
             var dbSet = DogTestData.GetMockDogs().AsQueryable().BuildMockDbSet();
 
@@ -160,7 +161,7 @@ namespace DogAPI.Test
 
             var existedDog = mockDogs.First();
 
-            var dogDTO = new CreateDogRequestDTO { Name = existedDog.Name , Color = "grey", TailLenght = 23, Weight = 14 };
+            var dogDTO = new CreateDogDTO { Name = existedDog.Name , Color = "grey", TailLenght = 23, Weight = 14 };
 
             // Act
             Func<Task> act = async () => await _service.AddDogAsync(dogDTO);
@@ -173,7 +174,7 @@ namespace DogAPI.Test
         public async Task UpdateDogAsync_ValidData_UpdatesSuccessfully()
         {
             // Arrange
-            var dogDTO = new UpdateDogRequestDTO { Color = "yellow", TailLenght = 100, Weight = 100 };
+            var dogDTO = new UpdateDogDTO { Color = "yellow", TailLenght = 100, Weight = 100 };
 
             var mockDogs = DogTestData.GetMockDogs().AsQueryable();
             var dbSet = mockDogs.AsQueryable().BuildMockDbSet();
@@ -197,7 +198,7 @@ namespace DogAPI.Test
         public async Task UpdateDogAsync_InvalidName_ThrowsException(string invalidName)
         {
             // Arrange
-            var dogDTO = new UpdateDogRequestDTO { Color = "yellow", TailLenght = 100, Weight = 100 };
+            var dogDTO = new UpdateDogDTO { Color = "yellow", TailLenght = 100, Weight = 100 };
             var dbSet = DogTestData.GetMockDogs().AsQueryable().BuildMockDbSet();
             _dogsRepository.AsQueryable().Returns(dbSet);
 

@@ -9,21 +9,21 @@ namespace DogAPI.Validator
         {
             RuleFor(dto => dto.Name)
                 .NotNull()
-                .WithMessage("Name must be required");
+                .WithMessage("Name is required");
 
             RuleFor(dto => dto.Color)
                 .NotNull()
-                .WithMessage("Color must be required");
+                .WithMessage("Color is required");
 
             RuleFor(dto => dto.TailLenght)
                 .NotNull()
-                .WithMessage("Tail lenght must be required")
+                .WithMessage("Tail lenght is required")
                 .GreaterThan(0)
                 .WithMessage("Minimum number of tail lenght must be greater than 0");
 
             RuleFor(dto => dto.Weight)
                 .NotNull()
-                .WithMessage("Weight must be required")
+                .WithMessage("Weight must is required")
                 .GreaterThan(0)
                 .WithMessage("Minimum number of weight must be greater than 0");
 

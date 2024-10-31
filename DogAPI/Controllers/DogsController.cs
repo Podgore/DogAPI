@@ -30,7 +30,7 @@ namespace DogAPI.Controllers
         }
 
         [HttpPost("dog")]
-        public async Task<IActionResult> CreateDogAsync(CreateDogRequestDTO request)
+        public async Task<IActionResult> CreateDogAsync(CreateDogDTO request)
         {
             var result = await _dogService.AddDogAsync(request);
             return Ok(result);
@@ -44,7 +44,7 @@ namespace DogAPI.Controllers
         }
 
         [HttpPut("dog/{name}")]
-        public async Task<IActionResult> UpdateDogAsync(string name, [FromQuery] UpdateDogRequestDTO request)
+        public async Task<IActionResult> UpdateDogAsync(string name, [FromQuery] UpdateDogDTO request)
         {
             var result = await _dogService.UpdateDogAsync(name, request);
             return Ok(result);

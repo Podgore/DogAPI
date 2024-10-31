@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace DogAPI.Validator
 {
-    public class UpdateDogDTOValidator : AbstractValidator<UpdateDogRequestDTO>
+    public class UpdateDogDTOValidator : AbstractValidator<UpdateDogDTO>
     {
         public UpdateDogDTOValidator()
         {

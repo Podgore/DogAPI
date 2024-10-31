@@ -1,6 +1,6 @@
 ﻿namespace DogAPI.Common.DTOs
 {
-    public class CreateDogRequestDTO
+    public class CreateDogDTO
     {
         public string Name { get; set; } = string.Empty;
         public string Color { get; set; } = string.Empty;

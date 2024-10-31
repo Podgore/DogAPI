@@ -10,11 +10,11 @@ namespace DogAPI.BLL.Profiles
         {
             CreateMap<Dog, DogDTO>();
 
-            CreateMap<CreateDogRequestDTO, Dog>();
+            CreateMap<CreateDogDTO, Dog>();
 
-            CreateMap<UpdateDogRequestDTO, Dog>();
+            CreateMap<UpdateDogDTO, Dog>();
 
-            CreateMap<Dog, UpdateDogRequestDTO>();
+            CreateMap<Dog, UpdateDogDTO>();
         }
     }
 }

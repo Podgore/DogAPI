@@ -38,7 +38,7 @@ namespace DogAPI.BLL.Services
             return _mapper.Map<DogDTO>(entity);
         }
 
-        public async Task<DogDTO> AddDogAsync(CreateDogRequestDTO dogDTO)
+        public async Task<DogDTO> AddDogAsync(CreateDogDTO dogDTO)
         {
             if (await _dogsRepository.AsQueryable().AnyAsync(i => i.Name == dogDTO.Name))
                 throw new AlreadyExistsException($"Entity with key {dogDTO.Name} already exist in current database");
@@ -50,7 +50,7 @@ namespace DogAPI.BLL.Services
             return _mapper.Map<DogDTO>(entity);
         }
 
-        public async Task<DogDTO> UpdateDogAsync(string name, UpdateDogRequestDTO dogDTO)
+        public async Task<DogDTO> UpdateDogAsync(string name, UpdateDogDTO dogDTO)
         {
             var entity = await _dogsRepository.AsQueryable().FirstOrDefaultAsync(i => i.Name == name)
                 ?? throw new NotFoundException($"Unable to find entity with such a key: {name}");
