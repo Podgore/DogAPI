@@ -1,4 +1,4 @@
-﻿using DogAPI.DAL.Extensions;
+﻿using DogAPI.Common.Exceptions;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -9,7 +9,7 @@ namespace DogAPI.DAL.Extensions
         public static IQueryable<T> OrderByAttribute<T>(this IQueryable<T> source, string attribute, string order)
         {
             PropertyInfo propInfo = typeof(T).GetProperty(attribute)
-                ?? throw new Exception($"Type {attribute} does not exist on {typeof(T).Name} attribute");
+                ?? throw new NotFoundException($"Type {attribute} does not exist on {typeof(T).Name} attribute");
 
             if (!typeof(IComparable).IsAssignableFrom(propInfo.PropertyType))
                 throw new InvalidOperationException($"Property {attribute} on type {typeof(T).Name} incomparable");
@@ -26,7 +26,7 @@ namespace DogAPI.DAL.Extensions
             {
                 "asc" => source.OrderBy(orderByExpression),
                 "desc" => source.OrderByDescending(orderByExpression),
-                _ => throw new Exception($"Unable to sort by current order: {order}")
+                _ => throw new InvalidOperationException($"Unable to sort by current order: {order}")
             };
 
             return result;

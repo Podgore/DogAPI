@@ -7,9 +7,7 @@ using DogAPI.Common.DTOs;
 using NSubstitute;
 using FluentAssertions;
 using MockQueryable.NSubstitute;
-using NSubstitute.ExceptionExtensions;
-using DogAPI.DAL.Entities;
-using Microsoft.EntityFrameworkCore;
+using DogAPI.Common.Exceptions;
 
 namespace DogAPI.Test
 {
@@ -75,7 +73,7 @@ namespace DogAPI.Test
             result.Should()
                 .NotBeNull()
                 .And.HaveCount(10)
-                .And.NotBeEquivalentTo(expectedList);
+                .And.BeEquivalentTo(expectedList);
         }
 
         [Fact]
@@ -96,7 +94,7 @@ namespace DogAPI.Test
             Func<Task> result = async () => await _service.GetDogsAsync(request);
 
             // Assert
-            await result.Should().ThrowAsync<Exception>();
+            await result.Should().ThrowAsync<NotFoundException>();
         }
 
         [Fact]
@@ -111,32 +109,33 @@ namespace DogAPI.Test
             var existedDog = mockDogs.First();
 
             // Act
-            var result = await _service.GetDogByName(existedDog.Name);
+            var result = await _service.GetDogByNameAsync(existedDog.Name);
 
             // Assert
             result.Should().NotBeNull();
             result.Name.Should().Be(existedDog.Name);
         }
 
-        [Fact]
-        public async Task GetDogByName_InvalidName_ThrowsException()
+        [Theory]
+        [InlineData("NonexistentEntity")]
+        public async Task GetDogByName_InvalidName_ThrowsException(string invalidName)
         {
             // Arrange
             var dbSet = DogTestData.GetMockDogs().AsQueryable().BuildMockDbSet();
             _dogsRepository.AsQueryable().Returns(dbSet);
 
             // Act
-            Func<Task> act = async () => await _service.GetDogByName("NonexistentEntity");
+            Func<Task> act = async () => await _service.GetDogByNameAsync(invalidName);
 
             // Assert
-            await act.Should().ThrowAsync<Exception>().WithMessage("Unable to find entity with such a key: NonexistentEntity");
+            await act.Should().ThrowAsync<NotFoundException>().WithMessage($"Unable to find entity with such a key: {invalidName}");
         }
 
         [Fact]
         public async Task AddDogAsync_NewDog_AddsSuccessfully()
         {
             // Arrange
-            var dogDTO = new DogDTO { Name = "NewDogEntity", Color = "grey", TailLenght = 23, Weight = 14};
+            var dogDTO = new CreateDogRequestDTO { Name = "NewDogEntity", Color = "grey", TailLenght = 23, Weight = 14};
 
             var dbSet = DogTestData.GetMockDogs().AsQueryable().BuildMockDbSet();
 
@@ -147,7 +146,7 @@ namespace DogAPI.Test
 
             // Assert
             result.Should().NotBeNull();
-            result.Name.Should().Be("NewDogEntity");
+            result.Name.Should().Be(dogDTO.Name);
         }
 
         [Fact]
@@ -161,7 +160,7 @@ namespace DogAPI.Test
 
             var existedDog = mockDogs.First();
 
-            var dogDTO = new DogDTO { Name = existedDog.Name , Color = "grey", TailLenght = 23, Weight = 14 };
+            var dogDTO = new CreateDogRequestDTO { Name = existedDog.Name , Color = "grey", TailLenght = 23, Weight = 14 };
 
             // Act
             Func<Task> act = async () => await _service.AddDogAsync(dogDTO);
@@ -174,7 +173,7 @@ namespace DogAPI.Test
         public async Task UpdateDogAsync_ValidData_UpdatesSuccessfully()
         {
             // Arrange
-            var dogDTO = new UpdateDogDTO { Color = "yellow", TailLenght = 100, Weight = 100 };
+            var dogDTO = new UpdateDogRequestDTO { Color = "yellow", TailLenght = 100, Weight = 100 };
 
             var mockDogs = DogTestData.GetMockDogs().AsQueryable();
             var dbSet = mockDogs.AsQueryable().BuildMockDbSet();
@@ -188,38 +187,40 @@ namespace DogAPI.Test
 
             // Assert
             result.Should().NotBeNull();
-            result.Color.Should().Be("yellow");
-            result.Weight.Should().Be(100);
-            result.TailLenght.Should().Be(100);
+            result.Color.Should().Be(dogDTO.Color);
+            result.Weight.Should().Be(dogDTO.Weight);
+            result.TailLenght.Should().Be(dogDTO.TailLenght);
         }
 
-        [Fact]
-        public async Task UpdateDogAsync_InvalidName_ThrowsException()
+        [Theory]
+        [InlineData("NonexistentEntity")]
+        public async Task UpdateDogAsync_InvalidName_ThrowsException(string invalidName)
         {
             // Arrange
-            var dogDTO = new UpdateDogDTO { Color = "yellow", TailLenght = 100, Weight = 100 };
+            var dogDTO = new UpdateDogRequestDTO { Color = "yellow", TailLenght = 100, Weight = 100 };
             var dbSet = DogTestData.GetMockDogs().AsQueryable().BuildMockDbSet();
             _dogsRepository.AsQueryable().Returns(dbSet);
 
             // Act
-            Func<Task> act = async () => await _service.UpdateDogAsync("NonexistentEntity", dogDTO);
+            Func<Task> act = async () => await _service.UpdateDogAsync(invalidName, dogDTO);
 
             // Assert
-            await act.Should().ThrowAsync<Exception>().WithMessage("Unable to find entity with such a key: NonexistentEntity");
+            await act.Should().ThrowAsync<Exception>().WithMessage($"Unable to find entity with such a key: {invalidName}");
         }
 
-        [Fact]
-        public async Task DeleteDog_InvalidName_ThrowsException()
+        [Theory]
+        [InlineData("NonexistentEntity")]
+        public async Task DeleteDog_InvalidName_ThrowsException(string invalidName)
         {
             // Arrange
             var dbSet = DogTestData.GetMockDogs().AsQueryable().BuildMockDbSet();
             _dogsRepository.AsQueryable().Returns(dbSet);
 
             // Act
-            Func<Task> act = async () => await _service.DeleteDog("NonexistentEntity");
+            Func<Task> act = async () => await _service.DeleteDogAsync(invalidName);
 
             // Assert
-            await act.Should().ThrowAsync<Exception>().WithMessage("Unable to find entity with such a key: NonexistentEntity");
+            await act.Should().ThrowAsync<Exception>().WithMessage($"Unable to find entity with such a key: {invalidName}");
         }
 
     }

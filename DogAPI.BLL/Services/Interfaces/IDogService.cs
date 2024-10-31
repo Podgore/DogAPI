@@ -4,10 +4,10 @@ namespace DogAPI.BLL.Services
 {
     public interface IDogService
     {
-        public Task<List<DogDTO>> GetDogsAsync(GetDogsRequest? request);
-        public Task<DogDTO> AddDogAsync(DogDTO dogDTO);
-        public Task<bool> DeleteDog(string name);
-        public Task<DogDTO> UpdateDogAsync(string name, UpdateDogDTO dogDTO);
-        Task<DogDTO> GetDogByName(string name);
+        Task<List<DogDTO>> GetDogsAsync(GetDogsRequest? request);
+        Task<DogDTO> AddDogAsync(CreateDogRequestDTO dogDTO);
+        Task DeleteDogAsync(string name);
+        Task<DogDTO> UpdateDogAsync(string name, UpdateDogRequestDTO dogDTO);
+        Task<DogDTO> GetDogByNameAsync(string name);
     }
 }

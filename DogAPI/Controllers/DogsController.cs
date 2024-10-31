@@ -25,12 +25,12 @@ namespace DogAPI.Controllers
         [HttpGet("dog/{name}")]
         public async Task<IActionResult> GetDogsByNameAsync(string name)
         {
-            var dogs = await _dogService.GetDogByName(name);
+            var dogs = await _dogService.GetDogByNameAsync(name);
             return Ok(dogs);
         }
 
         [HttpPost("dog")]
-        public async Task<IActionResult> CreateDogAsync(DogDTO request)
+        public async Task<IActionResult> CreateDogAsync(CreateDogRequestDTO request)
         {
             var result = await _dogService.AddDogAsync(request);
             return Ok(result);
@@ -39,12 +39,12 @@ namespace DogAPI.Controllers
         [HttpDelete("dog/{name}")]
         public async Task<IActionResult> DeleteDogAsync(string name)
         {
-            var result = await _dogService.DeleteDog(name);
-            return result ? Ok() : BadRequest();
+            await _dogService.DeleteDogAsync(name);
+            return Ok();
         }
 
         [HttpPut("dog/{name}")]
-        public async Task<IActionResult> UpdateDogAsync(string name, [FromQuery] UpdateDogDTO request)
+        public async Task<IActionResult> UpdateDogAsync(string name, [FromQuery] UpdateDogRequestDTO request)
         {
             var result = await _dogService.UpdateDogAsync(name, request);
             return Ok(result);
