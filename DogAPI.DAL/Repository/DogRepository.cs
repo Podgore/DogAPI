@@ -7,6 +7,7 @@ namespace DogAPI.DAL.Repository
 {
     public class DogRepository : RepositoryBase<Dog, string>, IDogRepository
     {
-        public DogRepository(ApplicationDbContext context) : base(context) { }
+        public DogRepository(ApplicationDbContext context)
+            : base(context) { }
     }
 }

@@ -223,6 +223,5 @@ namespace DogAPI.Test
             // Assert
             await act.Should().ThrowAsync<Exception>().WithMessage($"Unable to find entity with such a key: {invalidName}");
         }
-
     }
 }

@@ -33,14 +33,14 @@ namespace DogAPI.Controllers
         public async Task<IActionResult> CreateDogAsync(CreateDogDTO request)
         {
             var result = await _dogService.AddDogAsync(request);
-            return Ok(result);
+            return CreatedAtAction("dog", result);
         }
 
         [HttpDelete("dog/{name}")]
         public async Task<IActionResult> DeleteDogAsync(string name)
         {
             await _dogService.DeleteDogAsync(name);
-            return Ok();
+            return NoContent();
         }
 
         [HttpPut("dog/{name}")]

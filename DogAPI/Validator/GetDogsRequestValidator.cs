@@ -8,12 +8,10 @@ namespace DogAPI.Validator
         public GetDogsRequestValidator()
         {
             RuleFor(request => request.Page)
-                .GreaterThan(0)
-                .WithMessage("Minimum number of tail lenght must be greater than 0");
+                .GreaterThan(0);
 
             RuleFor(request => request.PageSize)
-                .GreaterThan(0)
-                .WithMessage("Minimum number of tail lenght must be greater than 0");
+                .GreaterThan(0);
         }
     }
 }

@@ -19,13 +19,13 @@ namespace DogAPI.Validator
                 .NotNull()
                 .WithMessage("Tail lenght is required")
                 .GreaterThan(0)
-                .WithMessage("Minimum number of tail lenght must be greater than 0");
+                .WithMessage("Tail lenght must be greater than 0");
 
             RuleFor(dto => dto.Weight)
                 .NotNull()
                 .WithMessage("Weight must is required")
                 .GreaterThan(0)
-                .WithMessage("Minimum number of weight must be greater than 0");
+                .WithMessage("Weight must be greater than 0");
 
         }
     }
