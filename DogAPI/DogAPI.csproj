@@ -30,4 +30,8 @@
     <ProjectReference Include="..\DogAPI.DAL\DogAPI.DAL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Uploads\" />
+  </ItemGroup>
+
 </Project>
