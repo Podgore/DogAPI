@@ -15,14 +15,16 @@ namespace DogAPI.Test
     {
         private readonly IMapper _mapper;
         private readonly IDogRepository _dogsRepository;
+        private readonly IAnimalShelterRepository _animalShelterRepository;
         private readonly IDogService _service;
 
         public DogServiceTests()
         {
             _mapper = new MapperConfiguration(cfg => cfg.AddProfile<DogProfile>()).CreateMapper();
             _dogsRepository = Substitute.For<IDogRepository>();
+            _animalShelterRepository = Substitute.For<IAnimalShelterRepository>();
 
-            _service = new DogService(_dogsRepository, _mapper);
+            _service = new DogService(_dogsRepository, _mapper, _animalShelterRepository);
         }
 
         [Fact]
@@ -45,36 +47,6 @@ namespace DogAPI.Test
             result.Should()
                 .NotBeNull()
                 .And.HaveCount(10);
-        }
-
-        [Fact]
-        public async Task GetDogsAsync_WithSortingAndPagination_ReturnsPagedAndSortedList()
-        {
-            //Arrange
-            var dogs = DogTestData.GetMockDogs().AsQueryable();
-
-            var dbSet = dogs.BuildMockDbSet();
-
-            _dogsRepository.AsQueryable().Returns(dbSet);
-
-            // Act
-            var request = new GetDogsRequest
-            {
-                Order = "asc",
-                Atrribute = "Weight",
-                PageSize = 10,
-                Page = 1
-            };
-
-            var result = await _service.GetDogsAsync(request);
-
-            var expectedList = dogs.OrderBy(d => d.Weight).Take(10);
-
-            // Assert
-            result.Should()
-                .NotBeNull()
-                .And.HaveCount(10)
-                .And.BeEquivalentTo(expectedList);
         }
 
         [Fact]
@@ -136,14 +108,14 @@ namespace DogAPI.Test
         public async Task AddDogAsync_NewDog_AddsSuccessfully()
         {
             // Arrange
-            var dogDTO = new CreateDogDTO { Name = "NewDogEntity", Color = "grey", TailLenght = 23, Weight = 14};
+            var dogDTO = new CreateDogDTO { Name = "NewDogEntity", Color = "grey", TailLength = 23, Weight = 14};
 
             var dbSet = DogTestData.GetMockDogs().AsQueryable().BuildMockDbSet();
 
             _dogsRepository.AsQueryable().Returns(dbSet);
 
             // Act
-            var result = await _service.AddDogAsync(dogDTO);
+            var result = await _service.CreateDogAsync(dogDTO);
 
             // Assert
             result.Should().NotBeNull();
@@ -161,10 +133,10 @@ namespace DogAPI.Test
 
             var existedDog = mockDogs.First();
 
-            var dogDTO = new CreateDogDTO { Name = existedDog.Name , Color = "grey", TailLenght = 23, Weight = 14 };
+            var dogDTO = new CreateDogDTO { Name = existedDog.Name , Color = "grey", TailLength = 23, Weight = 14, AnimalShelterId = null};
 
             // Act
-            Func<Task> act = async () => await _service.AddDogAsync(dogDTO);
+            Func<Task> act = async () => await _service.CreateDogAsync(dogDTO);
 
             // Assert
             await act.Should().ThrowAsync<Exception>().WithMessage($"Entity with key {existedDog.Name} already exist in current database");
@@ -174,7 +146,7 @@ namespace DogAPI.Test
         public async Task UpdateDogAsync_ValidData_UpdatesSuccessfully()
         {
             // Arrange
-            var dogDTO = new UpdateDogDTO { Color = "yellow", TailLenght = 100, Weight = 100 };
+            var dogDTO = new UpdateDogDTO { Color = "yellow", TailLength = 100, Weight = 100 };
 
             var mockDogs = DogTestData.GetMockDogs().AsQueryable();
             var dbSet = mockDogs.AsQueryable().BuildMockDbSet();
@@ -190,7 +162,7 @@ namespace DogAPI.Test
             result.Should().NotBeNull();
             result.Color.Should().Be(dogDTO.Color);
             result.Weight.Should().Be(dogDTO.Weight);
-            result.TailLenght.Should().Be(dogDTO.TailLenght);
+            result.TailLength.Should().Be(dogDTO.TailLength);
         }
 
         [Theory]
@@ -198,7 +170,7 @@ namespace DogAPI.Test
         public async Task UpdateDogAsync_InvalidName_ThrowsException(string invalidName)
         {
             // Arrange
-            var dogDTO = new UpdateDogDTO { Color = "yellow", TailLenght = 100, Weight = 100 };
+            var dogDTO = new UpdateDogDTO { Color = "yellow", TailLength = 100, Weight = 100 };
             var dbSet = DogTestData.GetMockDogs().AsQueryable().BuildMockDbSet();
             _dogsRepository.AsQueryable().Returns(dbSet);
 

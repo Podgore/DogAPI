@@ -7,7 +7,7 @@ namespace DogAPI.Validator
     {
         public UpdateDogDTOValidator()
         {
-            RuleFor(dto => dto.TailLenght)
+            RuleFor(dto => dto.TailLength)
                 .GreaterThan(0)
                 .WithMessage("Tail lenght must be greater than 0");
 

@@ -7,6 +7,8 @@ namespace DogAPI.DAL.DBContext
     {
         public virtual DbSet<Dog> Dogs { get; set; } = null!;
 
+        public virtual DbSet<AnimalShelter> AnimalShelters { get; set; } = null!;
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options) { }
 

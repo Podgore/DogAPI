@@ -15,7 +15,7 @@ namespace DogAPI.Validator
                 .NotNull()
                 .WithMessage("Color is required");
 
-            RuleFor(dto => dto.TailLenght)
+            RuleFor(dto => dto.TailLength)
                 .NotNull()
                 .WithMessage("Tail lenght is required")
                 .GreaterThan(0)

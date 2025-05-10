@@ -32,7 +32,7 @@ namespace DogAPI.Controllers
         [HttpPost("dog")]
         public async Task<IActionResult> CreateDogAsync(CreateDogDTO request)
         {
-            var result = await _dogService.AddDogAsync(request);
+            var result = await _dogService.CreateDogAsync(request);
             return CreatedAtAction("dog", result);
         }
 

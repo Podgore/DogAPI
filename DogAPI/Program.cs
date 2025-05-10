@@ -8,6 +8,7 @@ using DogAPI.Extensions;
 using DogAPI.Validator;
 using FluentValidation.AspNetCore;
 using FluentValidation;
+using DogAPI.BLL.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,8 +25,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(opt =>
 
 // Repository
 builder.Services.AddScoped<IDogRepository, DogRepository>();
+builder.Services.AddScoped<IAnimalShelterRepository, AnimalShelterRepository>();
 
 builder.Services.AddScoped<IDogService, DogService>();
+builder.Services.AddScoped<IAnimalShelterService, AnimalShelterService>();
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
